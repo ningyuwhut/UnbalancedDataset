@@ -55,7 +55,7 @@ class UnderSampler(UnbalancedDataset):
             # If the minority class is up, skip it
             if key == self.minc:
                 continue
-
+            #如果抽样数大于该类的样本数，则将要抽样的样本数设置为该类的样本数，否则按比例计算
             # Set the ratio to be no more than the number of samples available
             if self.ratio * self.ucd[self.minc] > self.ucd[key]:
                 num_samples = self.ucd[key]
@@ -64,9 +64,9 @@ class UnderSampler(UnbalancedDataset):
 
             # Pick some elements at random
             seed(self.rs)
-            if self.replacement:
+            if self.replacement:#有放回
                 indx = randint(low=0, high=self.ucd[key], size=num_samples)
-            else:
+            else:#无放回
                 indx = sample(range((self.y == key).sum()), num_samples)
 
             # Concatenate to the minority class
