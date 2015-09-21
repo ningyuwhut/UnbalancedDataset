@@ -172,6 +172,7 @@ class UnbalancedDataset(object):
     def resample(self):
         pass
 
+    #统计数据集中每个类的样本数，并确定哪种是少数类，哪种是多数类（样本最少为minority，最多为majority）
     def fit(self, x, y):
         """
         Class method to find the relevant class statistics and store it.
@@ -228,7 +229,7 @@ class UnbalancedDataset(object):
             print(str(len(uniques)) +
                   " classes detected: " +
                   str(self.ucd), end="\n")
-
+    #采用不同的方法进行采样
     def transform(self):
         """
         Class method to re-sample the dataset with a particular technique.
@@ -312,6 +313,7 @@ class UnbalancedDataset(object):
 
         return links
 
+    #n_samples应该是少数类的样本数
     @staticmethod
     def make_samples(x, nn_data, y_type, nn_num, n_samples,
                      step_size=1., random_state=None, verbose=True):
@@ -322,7 +324,7 @@ class UnbalancedDataset(object):
         :param x:
             Minority points for which new samples are going to be created.
 
-        :param nn_data:
+        :param nn_data:#样本的所有邻居（长度为nn_num）
             Data set carrying all the neighbours to be used
 
         :param y_type:
@@ -353,13 +355,13 @@ class UnbalancedDataset(object):
         seed(random_state)
         seeds = randint(low=0,
                         high=100*len(nn_num.flatten()),
-                        size=n_samples)
+                        size=n_samples)#返回长度为size，大小在low和hight之间的随机整数
 
         # Randomly pick samples to construct neighbours from
         seed(random_state)
         samples = randint(low=0,
                           high=len(nn_num.flatten()),
-                          size=n_samples)
+                          size=n_samples)#给每个少数类样本从最近的邻居中随机选一个邻居用来生成新样本
 
         # Loop over the NN matrix and create new samples
         for i, n in enumerate(samples):
